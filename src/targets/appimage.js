@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const path = require("path");
 const os = require("os");
-const fs = require("fs");
+const fs = require("fs-extra");
 const process = require("process");
 const { execSync, spawn } = require("child_process");
 
@@ -73,18 +73,26 @@ const buildAppDir = async () => {
 };
 
 const createAppDir = async () => {
-  if (fs.existsSync(tmpdir)) {
+  if (!fs.existsSync(tmpdir)) {
+    try {
+      fs.mkdirSync(tmpdir);
+    } catch (error) {
+      utils.handleFatalError(error.message);
+    }
+  }
+
+  if (fs.existsSync(AppDir)) {
     const answers = await inquirer.prompt([
       {
         type: "confirm",
         name: "overwrite",
-        message: `A .tmp folder already exists in this dir would you like to overwrite it`,
+        message: `An AppDir folder already exists in your .tmp dir would you like to overwrite it`,
         default: true,
       },
     ]);
 
     if (answers.overwrite) {
-      utils.deleteResources(tmpdir);
+      utils.deleteResources(AppDir);
     } else {
       console.log("closing...");
       process.exit(1);
@@ -92,12 +100,9 @@ const createAppDir = async () => {
   }
 
   try {
-    fs.mkdirSync(tmpdir);
-    fs.mkdirSync(AppDir);
-    fs.mkdirSync(path.join(AppDir, "usr"));
-    fs.mkdirSync(path.join(AppDir, "usr", "bin"));
+    fs.mkdirSync(path.join(AppDir, "usr", "bin"), { recursive: true });
   } catch (err) {
-    utils.handleFatalError(err.message, tmpdir);
+    utils.handleFatalError(err.message, AppDir);
   }
 };
 
@@ -133,7 +138,7 @@ const configureAppDir = async () => {
       )} ${AppDir}`
     );
   } catch (err) {
-    utils.handleFatalError(err.message, tmpdir);
+    utils.handleFatalError(err.message, AppDir);
   }
 
   buildDesktopFile();
@@ -157,7 +162,7 @@ const buildDesktopFile = () => {
   try {
     desktopFile.writeScript(path.join(AppDir), appName);
   } catch (err) {
-    utils.handleFatalError(err.message, tmpdir);
+    utils.handleFatalError(err.message, AppDir);
   }
 };
 
@@ -168,7 +173,7 @@ const buildAppRun = () => {
   try {
     appRun.writeScript(AppDir);
   } catch (err) {
-    utils.handleFatalError(err.message, tmpdir);
+    utils.handleFatalError(err.message, AppDir);
   }
 };
 
@@ -188,7 +193,7 @@ const getAppImageTool = async () => {
       if (!fs.existsSync(osTempDir)) fs.mkdirSync(osTempDir);
       await download(appImageToolUrl, osTempDir);
     } catch (err) {
-      utils.handleFatalError(err.message, tmpdir);
+      utils.handleFatalError(err.message, AppDir);
     }
   } else if (fs.existsSync(path.join(process.cwd(), appimageSpec))) {
     appimageTool = path.join(process.cwd(), appimageSpec);
@@ -197,7 +202,7 @@ const getAppImageTool = async () => {
   try {
     execSync("chmod 777 " + appimageTool);
   } catch (err) {
-    utils.handleFatalError(err.message, tmpdir);
+    utils.handleFatalError(err.message, AppDir);
   }
 };
 
@@ -209,7 +214,7 @@ const configureAppImage = () => {
 
     let child;
     try {
-      child = spawn(`./${appimageTool}`, [AppDir], {
+      child = spawn(`${appimageTool}`, [AppDir], {
         env: { ARCH: arch },
       });
     } catch (err) {
@@ -228,7 +233,7 @@ const configureAppImage = () => {
     });
 
     child.on("exit", (code) => {
-      utils.deleteResources(tmpdir);
+      utils.deleteResources(AppDir);
 
       if (code !== 0) {
         reject(
