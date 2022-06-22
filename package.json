@@ -1,0 +1,32 @@
+{
+  "name": "neutralinojs-builder",
+  "version": "1.0.0",
+  "description": "A complete solution to make Neutralinojs app distribution packages",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neutralinojs-community/neutralinojs-builder.git"
+  },
+  "author": {
+    "name": "Neutralinojs and contributors",
+    "email": "neutralinojs@gmail.com",
+    "url": "https://neutralino.js.org"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/neutralinojs-community/neutralinojs-builder/issues"
+  },
+  "homepage": "https://github.com/neutralinojs-comunity/neutralinojs-builder#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "cli-spinner": "^0.2.10",
+    "decompress": "^4.2.1",
+    "inquirer": "^8.2.4",
+    "node-downloader-helper": "^2.1.1",
+    "ora": "^5.4.1"
+  }
+}
