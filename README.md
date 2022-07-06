@@ -25,6 +25,6 @@ neu plugins --remove @neutralinojs-community/builder
 
 The plugin currently supports only appimage builds for the x64 and arm64 architectures.
 
-More feutures will be added soon.
+More features will be added soon.
 
 Check implementation suggestions from [here](https://github.com/neutralinojs/gsoc2022#8-neutralinojs-builder-a-community-project-to-generate-neutralino-app-packages)
