@@ -1,15 +1,16 @@
 import process from "process";
 import path from "path";
 import fs from "fs";
-import utils from "./utils";
+import utils from "./utils.js";
+import type { Command } from "commander";
 
 import buildAppimage from "./targets/appimage.js";
 
-let neuModules;
+let neuModules: NeuModules;
 
-module.exports = {
+export default {
   command: "builder [target]",
-  register: (command, modules) => {
+  register: (command: Command, modules: NeuModules) => {
     command
       .description("builds installers for your Neutalinojs app")
       .option("--x64", "x64 or x86 amd/intel architecture")
@@ -33,6 +34,14 @@ module.exports = {
         if (!target) {
           // if the no target, get from neutralino.config.json
           const builderOptions = neuModules.config.get()?.cli?.builder;
+
+          // if no builderOptions are provided in config throw error
+          if (!builderOptions) {
+            utils.handleFatalError(
+              "No builder options provided in neutralino.config.json"
+            );
+          }
+
           const operatingSys = Object.keys(builderOptions);
 
           if (!operatingSys) utils.handleFatalError("Please Specify a target");
