@@ -1,23 +1,24 @@
-const fs = require("fs");
-const chalk = require("chalk");
+import { PathLike } from "fs";
+import fs from "fs";
+import chalk from "chalk";
 
-const error = (message) => {
+export const error = (message: string) => {
   console.error(`neu builder: ${chalk.bgRed.black("ERROR")} ${message}`);
 };
 
-const log = (message) => {
+export const log = (message: string) => {
   console.log(`neu builder: ${chalk.bgGreen.black("INFO")} ${message}`);
 };
 
-const warn = (message) => {
+export const warn = (message: string) => {
   console.warn(`neu builder: ${chalk.bgYellow.black("WARNING")} ${message}`);
 };
 
-const isNeutralinojsProject = (CONFIG_FILE) => {
+export const isNeutralinojsProject = (CONFIG_FILE: PathLike) => {
   return fs.existsSync(CONFIG_FILE);
 };
 
-const checkCurrentProject = (CONFIG_FILE) => {
+export const checkCurrentProject = (CONFIG_FILE: PathLike) => {
   if (!isNeutralinojsProject(CONFIG_FILE)) {
     error(
       `Unable to find ${CONFIG_FILE}. ` +
@@ -27,18 +28,18 @@ const checkCurrentProject = (CONFIG_FILE) => {
   }
 };
 
-const findExt = (path, extension) => {
+export const findExt = (path: PathLike, extension: string) => {
   let files = fs.readdirSync(path);
-  return !!files.filter((file) =>
+  return !!files.filter((file: string) =>
     file.match(new RegExp(`.*\.(${extension})`, "ig"))
   );
 };
 
-const deleteResources = (resource) => {
+export const deleteResources = (resource: PathLike) => {
   return fs.rmSync(resource, { recursive: true, force: true });
 };
 
-const handleFatalError = (message, resource = undefined) => {
+export const handleFatalError = (message: string, resource?: string) => {
   if (!message) return;
   error(`${message}`);
 
@@ -47,21 +48,9 @@ const handleFatalError = (message, resource = undefined) => {
   process.exit(1);
 };
 
-const handleNoneFatalError = (message, resource = undefined) => {
+export const handleNoneFatalError = (message: string, resource?: string) => {
   if (!message) return;
   error(`${message}`);
 
   if (resource) deleteResources(resource);
-};
-
-module.exports = {
-  error,
-  log,
-  warn,
-  isNeutralinojsProject,
-  checkCurrentProject,
-  findExt,
-  deleteResources,
-  handleFatalError,
-  handleNoneFatalError,
 };

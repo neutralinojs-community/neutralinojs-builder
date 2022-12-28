@@ -1,15 +1,16 @@
-const process = require("process");
-const path = require("path");
-const fs = require("fs");
-const utils = require("./utils");
+import process from "process";
+import path from "path";
+import fs from "fs";
+import * as utils from "./utils";
+import type { Command } from "commander";
 
-const buildAppimage = require("./targets/appimage.js");
+import buildAppimage from "./targets/appimage";
 
-let neuModules;
+let neuModules: NeuModules;
 
-module.exports = {
+const builderPlugin = {
   command: "builder [target]",
-  register: (command, modules) => {
+  register: (command: Command, modules: NeuModules) => {
     command
       .description("builds installers for your Neutalinojs app")
       .option("--x64", "x64 or x86 amd/intel architecture")
@@ -33,6 +34,14 @@ module.exports = {
         if (!target) {
           // if the no target, get from neutralino.config.json
           const builderOptions = neuModules.config.get()?.cli?.builder;
+
+          // if no builderOptions are provided in config throw error
+          if (!builderOptions) {
+            utils.handleFatalError(
+              "No builder options provided in neutralino.config.json"
+            );
+          }
+
           const operatingSys = Object.keys(builderOptions);
 
           if (!operatingSys) utils.handleFatalError("Please Specify a target");
@@ -78,7 +87,7 @@ module.exports = {
   },
 };
 
-const buildForLinux = async (targets = []) => {
+const buildForLinux = async (targets: any = []) => {
   for (const t in targets) {
     switch (targets[t].target) {
       case "appimage":
@@ -97,3 +106,7 @@ const buildForLinux = async (targets = []) => {
     }
   }
 };
+
+// neu cli requires the command and register to be present as named export
+export const command = builderPlugin.command;
+export const register = builderPlugin.register;
