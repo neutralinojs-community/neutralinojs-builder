@@ -1,9 +1,9 @@
-const process = require("process");
-const path = require("path");
-const fs = require("fs");
-const utils = require("./utils");
+import process from "process";
+import path from "path";
+import fs from "fs";
+import utils from "./utils";
 
-const buildAppimage = require("./targets/appimage.js");
+import buildAppimage from "./targets/appimage.js";
 
 let neuModules;
 
@@ -78,7 +78,7 @@ module.exports = {
   },
 };
 
-const buildForLinux = async (targets = []) => {
+const buildForLinux = async (targets: any = []) => {
   for (const t in targets) {
     switch (targets[t].target) {
       case "appimage":
