@@ -1,14 +1,14 @@
 import process from "process";
 import path from "path";
 import fs from "fs";
-import utils from "./utils.js";
+import * as utils from "./utils";
 import type { Command } from "commander";
 
-import buildAppimage from "./targets/appimage.js";
+import buildAppimage from "./targets/appimage";
 
 let neuModules: NeuModules;
 
-export default {
+const builderPlugin = {
   command: "builder [target]",
   register: (command: Command, modules: NeuModules) => {
     command
@@ -106,3 +106,7 @@ const buildForLinux = async (targets: any = []) => {
     }
   }
 };
+
+// neu cli requires the command and register to be present as named export
+export const command = builderPlugin.command;
+export const register = builderPlugin.register;

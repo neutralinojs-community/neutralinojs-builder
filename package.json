@@ -32,6 +32,9 @@
     "ora": "^5.4.1"
   },
   "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/fs-extra": "^9.0.13",
+    "@types/inquirer": "^8.2.4",
     "@types/node": "^18.11.18",
     "commander": "^9.4.1",
     "esbuild": "^0.16.11",

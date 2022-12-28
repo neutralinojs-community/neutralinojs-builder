@@ -23,3 +23,5 @@ type NeuModules = {
     dispatch: (event: string, data: any) => void;
   };
 };
+
+type BuildConfig = Record<string, any>;
