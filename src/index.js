@@ -7,6 +7,7 @@ const buildAppimage = require("./targets/appimage.js");
 
 let neuModules;
 
+
 module.exports = {
   command: "builder [target]",
   register: (command, modules) => {
@@ -33,6 +34,8 @@ module.exports = {
         if (!target) {
           // if the no target, get from neutralino.config.json
           const builderOptions = neuModules.config.get()?.cli?.builder;
+
+          if(!builderOptions) utils.handleFatalError("Please Specify a target");
           const operatingSys = Object.keys(builderOptions);
 
           if (!operatingSys) utils.handleFatalError("Please Specify a target");
