@@ -31,9 +31,6 @@ It sits on top of the existing neu build workflow and automates packaging for di
 
 ## Installation
 
-```bash
-neu plugins --add @neutralinojs-community/builder
-# neutralinojs-builder
 
 ```bash
 # Installing the plugin
