@@ -1,5 +1,39 @@
 # neutralinojs-builder
-A neu CLI extension to create Neutralinojs app packages
+
+``neutralinojs-builder`` is a lightweight neu CLI plugin for generating platform-specific installers and distributable packages for Neutralinojs applications.
+
+It sits on top of the existing neu build workflow and automates packaging for different platforms using the appropriate native tools. The goal is to keep the Neutralinojs CLI minimal while still making app distribution easy and consistent.
+
+---
+
+## Features
+
+- Plugin-based integration with the `neu` CLI
+- Platform-specific installer/package generation
+- Support for multiple CPU architectures
+- Shared staging and packaging workflow
+- SEA (Single Executable Application) awareness
+- Configuration-driven builds through `neutralino.config.json`
+- Modular target architecture for future extensibility
+
+---
+
+## Supported Targets
+
+| Target | Output |
+|---|---|
+| NSIS | `.exe` Windows installer |
+| Debian | `.deb` package |
+| AppImage | `.AppImage` package |
+| DMG | `.dmg` macOS installer |
+
+---
+
+## Installation
+
+```bash
+neu plugins --add @neutralinojs-community/builder
+# neutralinojs-builder
 
 ```bash
 # Installing the plugin
@@ -17,3 +51,6 @@ neu builder
 # Removing the plugin
 neu plugins --remove @neutralinojs-community/builder
 ```
+
+## Development Status
+This project is currently under active development and the initial release is expected soon. The architecture and implementation may evolve during development as the packaging pipeline and platform targets change.
