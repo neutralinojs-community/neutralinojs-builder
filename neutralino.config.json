@@ -1,0 +1,68 @@
+{
+  "applicationId": "com.example.myapp",
+  "version": "1.0.0",
+  "defaultMode": "window",
+
+  "cli": {
+    "builder": {
+      "windows": {
+        "targets": [
+          {
+            "target": "nsis",
+            "arch": [
+              "x64",
+              "ia32"
+            ],
+            "icon": "/assets/windows/app.ico",
+            "sidebarImage": "/assets/windows/sidebar.bmp",
+            "headerImage": "/assets/windows/header.bmp",
+            "license": "/assets/LICENSE.txt",
+            "output": "/dist/windows"
+          }
+        ]
+      },
+      "linux": {
+        "targets": [
+          {
+            "target": "deb",
+            "arch": [
+              "x64",
+              "ia32",
+              "armhf"
+            ],
+            "icon": "/assets/linux/app.png",
+            "desktopEntry": "/assets/linux/myapp.desktop",
+            "category": "Utility",
+            "output": "/dist/linux"
+          },
+          {
+            "target": "appimage",
+            "arch": [
+              "x64",
+              "arm64"
+            ],
+            "icon": "/assets/linux/app.png",
+            "desktopEntry": "/assets/linux/myapp.desktop",
+            "license": "/assets/LICENSE.txt",
+            "output": "/dist/linux"
+          }
+        ]
+      },
+      "mac": {
+        "targets": [
+          {
+            "target": "dmg",
+            "arch": [
+              "x64",
+              "arm64",
+              "universal"
+            ],
+            "icon": "/assets/mac/app.icns",
+            "background": "/assets/mac/dmg-background.png",
+            "output": "/dist/mac"
+          }
+        ]
+      }
+    }
+  }
+}
