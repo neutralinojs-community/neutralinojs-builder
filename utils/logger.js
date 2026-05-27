@@ -1,10 +1,19 @@
 const chalk = require('chalk');
 
-const logger = {
-    info: (msg) => console.log(`neu-builder: ${chalk.bgGreen.black('INFO')} ${msg}`),
-    success: (msg) => console.log(`neu-builder: ${chalk.bgGreen.black('INFO')} ${msg}`),
-    warn: (msg) => console.warn(`neu-builder: ${chalk.bgYellow.black('WARN')} ${msg}`),
-    error: (msg) => console.error(`neu-builder: ${chalk.bgRed.black('ERRR')} ${msg}`)
+const formatMsg = (msg) => typeof msg === 'object' ? JSON.stringify(msg, null, 2) : msg;
+
+let info = (msg) => console.log(`neu: ${chalk.bgGreen.black('INFO')} ${formatMsg(msg)}`);
+let warn = (msg) => console.warn(`neu: ${chalk.bgYellow.black('WARN')} ${formatMsg(msg)}`);
+let error = (msg) => console.error(`neu: ${chalk.bgRed.black('ERRR')} ${formatMsg(msg)}`);
+let debug = (msg) => {
+    if (process.env.DEBUG) {
+        console.log(`neu: ${chalk.bgMagenta.white('DEBG')} ${formatMsg(msg)}`);
+    }
 };
 
-module.exports = logger;
+module.exports = {
+    info,
+    warn,
+    error,
+    debug
+};
