@@ -1,0 +1,14 @@
+{
+  "name": "spec",
+  "version": "1.0.0",
+  "description": "Test suite for neutralinojs-builder",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^11.7.6"
+  }
+}
