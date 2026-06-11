@@ -2,13 +2,12 @@
 
 const logger = require("./utils/logger");
 const resolveConfig = require("./lib/configresolver");
-
+const precheck = require("./lib/precheck")
 const args = process.argv.slice(2);
 const separatorIndex = args.indexOf('--');
 const passedFlags = separatorIndex !== -1 ? args.slice(0, separatorIndex) : args;
 const neuBuildFlags = separatorIndex !== -1 ? args.slice(separatorIndex + 1) : [];
 const target = passedFlags.find(arg => !arg.startsWith('-'));
-
 logger.info("Neutralinojs Builder initialized.");
 
 const config = resolveConfig();
@@ -23,4 +22,12 @@ if (!target) {
     if (neuBuildFlags.length > 0) {
         logger.info(`Neu build flags detected: ${neuBuildFlags.join(' ')}`);
     }
+}
+
+const precheckRes = precheck(config);
+if (precheck) {
+    logger.info("Precheck Stage Passed.");
+}
+else {
+    logger.info("Precheck Stage Failed.");
 }
