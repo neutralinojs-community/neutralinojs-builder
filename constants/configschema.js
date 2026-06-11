@@ -10,6 +10,7 @@ const resolvedConfig = {
     targetPlatform: null,
     target: null,
     arch: "x64",
+    buildType: "standard",
     assets: {},
     metadata: {},
     paths: {}

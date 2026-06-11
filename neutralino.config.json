@@ -13,10 +13,10 @@
               "x64",
               "ia32"
             ],
-            "icon": "/assets/windows/app.ico",
-            "sidebarImage": "/assets/windows/sidebar.bmp",
-            "headerImage": "/assets/windows/header.bmp",
-            "license": "/assets/LICENSE.txt",
+            "icon": "/installerassets/windows/nsis/app.ico",
+            "sidebarImage": "/installerassets/windows/nsis/sidebar.bmp",
+            "headerImage": "/installerassets/windows/nsis/header.bmp",
+            "license": "/installerassets/LICENSE.txt",
             "output": "/dist/windows"
           }
         ]
@@ -30,8 +30,8 @@
               "ia32",
               "armhf"
             ],
-            "icon": "/assets/linux/app.png",
-            "desktopEntry": "/assets/linux/myapp.desktop",
+            "icon": "/installerassets/linux/deb/app.png",
+            "desktopEntry": "/installerassets/linux/deb/myapp.desktop",
             "category": "Utility",
             "output": "/dist/linux"
           },
@@ -41,9 +41,9 @@
               "x64",
               "arm64"
             ],
-            "icon": "/assets/linux/app.png",
-            "desktopEntry": "/assets/linux/myapp.desktop",
-            "license": "/assets/LICENSE.txt",
+            "icon": "/installerassets/linux/appimage/app.png",
+            "desktopEntry": "/installerassets/linux/appimage/myapp.desktop",
+            "license": "/installerassets/LICENSE.txt",
             "output": "/dist/linux"
           }
         ]
@@ -57,8 +57,8 @@
               "arm64",
               "universal"
             ],
-            "icon": "/assets/mac/app.icns",
-            "background": "/assets/mac/dmg-background.png",
+            "icon": "/installerassets/mac/dmg/app.icns",
+            "background": "/installerassets/mac/dmg/dmg-background.png",
             "output": "/dist/mac"
           }
         ]
