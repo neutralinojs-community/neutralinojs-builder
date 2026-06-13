@@ -35,180 +35,105 @@ function validateTarget(
 describe(
     "Config Resolver",
     () => {
-
         it(
             "should detect host and target platforms separately",
             () => {
-
                 const config =
                     resolveConfig([
                         "nsis",
                         "--x64"
                     ]);
-
                 assert.equal(
                     config.targetPlatform,
                     "windows"
                 );
-
                 assert.ok(
                     config.hostPlatform
                 );
-
             }
         );
-
         describe(
             "NSIS",
             () => {
-
                 it(
                     "should resolve x64",
                     () => {
 
-                        validateTarget(
-                            "nsis",
-                            "x64",
-                            "windows"
-                        );
-
+                        validateTarget("nsis", "x64", "windows");
                     }
                 );
-
                 it(
                     "should resolve ia32",
                     () => {
-
-                        validateTarget(
-                            "nsis",
-                            "ia32",
-                            "windows"
-                        );
-
+                        validateTarget("nsis", "ia32", "windows");
                     }
                 );
-
             }
         );
-
         describe(
             "DEB",
             () => {
-
                 it(
                     "should resolve x64",
                     () => {
-
-                        validateTarget(
-                            "deb",
-                            "x64",
-                            "linux"
-                        );
-
+                        validateTarget("deb", "x64", "linux");
                     }
                 );
-
                 it(
                     "should resolve ia32",
                     () => {
-
-                        validateTarget(
-                            "deb",
-                            "ia32",
-                            "linux"
-                        );
-
+                        validateTarget("deb", "ia32", "linux");
                     }
                 );
-
                 it(
                     "should resolve armhf",
                     () => {
-
-                        validateTarget(
-                            "deb",
-                            "armhf",
-                            "linux"
-                        );
+                        validateTarget("deb", "armhf", "linux");
 
                     }
                 );
-
             }
         );
-
         describe(
             "AppImage",
             () => {
-
                 it(
                     "should resolve x64",
                     () => {
-
-                        validateTarget(
-                            "appimage",
-                            "x64",
-                            "linux"
-                        );
+                        validateTarget("appimage", "x64", "linux");
 
                     }
                 );
-
                 it(
                     "should resolve arm64",
                     () => {
-
-                        validateTarget(
-                            "appimage",
-                            "arm64",
-                            "linux"
-                        );
-
+                        validateTarget("appimage", "arm64", "linux");
                     }
                 );
-
             }
         );
-
         describe(
             "DMG",
             () => {
-
                 it(
                     "should resolve x64",
                     () => {
 
-                        validateTarget(
-                            "dmg",
-                            "x64",
-                            "mac"
-                        );
+                        validateTarget("dmg", "x64", "mac");
 
                     }
                 );
-
                 it(
                     "should resolve arm64",
                     () => {
 
-                        validateTarget(
-                            "dmg",
-                            "arm64",
-                            "mac"
-                        );
-
+                        validateTarget("dmg", "arm64", "mac");
                     }
                 );
-
                 it(
                     "should resolve universal",
                     () => {
-
-                        validateTarget(
-                            "dmg",
-                            "universal",
-                            "mac"
-                        );
+                        validateTarget("dmg", "universal", "mac");
 
                     }
                 );
