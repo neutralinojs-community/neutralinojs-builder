@@ -5,16 +5,29 @@ const cliOptions = {
 };
 
 const resolvedConfig = {
-
     hostPlatform: null,
     targetPlatform: null,
     target: null,
     arch: "x64",
     buildType: "standard",
-    assets: {},
-    metadata: {},
-    paths: {}
-
+    assets: {
+        icon: null,
+        desktopEntry: null,
+        license: null,
+        sidebarImage: null,
+        headerImage: null,
+        background: null
+    },
+    metadata: {
+        applicationId: null,
+        version: null,
+        maintainer: null,
+        category: null,
+        description: null
+    },
+    paths: {
+        output: null
+    }
 };
 
 module.exports = {

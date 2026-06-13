@@ -33,7 +33,8 @@
             "icon": "/installerassets/linux/deb/app.png",
             "desktopEntry": "/installerassets/linux/deb/myapp.desktop",
             "category": "Utility",
-            "output": "/dist/linux"
+            "output": "/dist/linux",
+            "maintainer": "GSoC"
           },
           {
             "target": "appimage",
@@ -44,7 +45,8 @@
             "icon": "/installerassets/linux/appimage/app.png",
             "desktopEntry": "/installerassets/linux/appimage/myapp.desktop",
             "license": "/installerassets/LICENSE.txt",
-            "output": "/dist/linux"
+            "output": "/dist/linux",
+            "maintainer": "GSoC"
           }
         ]
       },
