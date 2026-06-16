@@ -1,5 +1,6 @@
 {
   "applicationId": "com.example.myapp",
+  "applicationName": "My First Builder App",
   "version": "1.0.0",
   "defaultMode": "window",
 
@@ -17,7 +18,7 @@
             "sidebarImage": "/installerassets/windows/nsis/sidebar.bmp",
             "headerImage": "/installerassets/windows/nsis/header.bmp",
             "license": "/installerassets/LICENSE.txt",
-            "output": "/dist/windows"
+            "output": "./dist/windows"
           }
         ]
       },
@@ -33,7 +34,7 @@
             "icon": "/installerassets/linux/deb/app.png",
             "desktopEntry": "/installerassets/linux/deb/myapp.desktop",
             "category": "Utility",
-            "output": "/dist/linux",
+            "output": "./dist/linux",
             "maintainer": "GSoC"
           },
           {
@@ -45,7 +46,7 @@
             "icon": "/installerassets/linux/appimage/app.png",
             "desktopEntry": "/installerassets/linux/appimage/myapp.desktop",
             "license": "/installerassets/LICENSE.txt",
-            "output": "/dist/linux",
+            "output": "./dist/linux",
             "maintainer": "GSoC"
           }
         ]
@@ -61,7 +62,7 @@
             ],
             "icon": "/installerassets/mac/dmg/app.icns",
             "background": "/installerassets/mac/dmg/dmg-background.png",
-            "output": "/dist/mac"
+            "output": "./dist/mac"
           }
         ]
       }

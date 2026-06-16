@@ -20,6 +20,7 @@ const resolvedConfig = {
     },
     metadata: {
         applicationId: null,
+        applicationName: null,
         version: null,
         maintainer: null,
         category: null,
