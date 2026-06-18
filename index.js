@@ -14,7 +14,7 @@ const config = resolveConfig();
 config.neuBuildFlags = neuBuildFlags;
 
 logger.info("Configuration loaded.");
-
+logger.info(config);
 if (!target) {
     logger.warn("No target specified. Usage: neu-builder <target> -- [neu build flags]");
 } else {

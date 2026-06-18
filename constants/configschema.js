@@ -12,7 +12,6 @@ const resolvedConfig = {
     buildType: "standard",
     assets: {
         icon: null,
-        desktopEntry: null,
         license: null,
         sidebarImage: null,
         headerImage: null,
