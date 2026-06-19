@@ -1,33 +1,27 @@
 #!/usr/bin/env node
 
 const logger = require("./utils/logger");
-const resolveConfig = require("./lib/configresolver");
-const precheck = require("./lib/precheck")
+const builder = require("./lib/builder");
+
 const args = process.argv.slice(2);
 const separatorIndex = args.indexOf('--');
 const passedFlags = separatorIndex !== -1 ? args.slice(0, separatorIndex) : args;
 const neuBuildFlags = separatorIndex !== -1 ? args.slice(separatorIndex + 1) : [];
 const target = passedFlags.find(arg => !arg.startsWith('-'));
-logger.info("Neutralinojs Builder initialized.");
-
-const config = resolveConfig();
-config.neuBuildFlags = neuBuildFlags;
 
 logger.info("Configuration loaded.");
 logger.info(config);
+logger.info("Neutralinojs Builder initialized.");
+
 if (!target) {
     logger.warn("No target specified. Usage: neu-builder <target> -- [neu build flags]");
+    process.exit(1);
 } else {
     logger.info(`Target detected: ${target}`);
     if (neuBuildFlags.length > 0) {
-        logger.info(`Neu build flags detected: ${neuBuildFlags.join(' ')}`);
+        logger.info(`Forwarding core build flags: ${neuBuildFlags.join(' ')}`);
     }
-}
-
-const precheckRes = precheck(config);
-if (precheck) {
-    logger.info("Precheck Stage Passed.");
-}
-else {
-    logger.info("Precheck Stage Failed.");
+    builder.build(target, neuBuildFlags).catch(() => {
+        process.exit(1);
+    });
 }
