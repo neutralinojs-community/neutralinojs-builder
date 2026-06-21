@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "A standalone Neutralinojs CLI plugin for packaging and installer generation",
   "main": "index.js",
-  "bin": {
-    "neu-builder": "./index.js"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
