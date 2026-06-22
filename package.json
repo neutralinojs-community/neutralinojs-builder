@@ -32,6 +32,7 @@
     "url": "https://github.com/neutralinojs-community/neutralinojs-builder/issues"
   },
   "dependencies": {
-    "chalk": "^4.1.2"
+    "chalk": "^4.1.2",
+    "deboa": "^1.2.0"
   }
 }
