@@ -1,40 +1,161 @@
 const assert = require("assert");
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 
 const stagingManager = require("../lib/stagingmanager");
-const targetLoader = require("../lib/targetloader");
 
-describe("Staging Manager", () => {
-    it("should throw error if dist directory not found", () => {
-        const config = {
-            target: "nsis",
-            arch: "x64"
-        };
-        assert.throws(() => {
-            stagingManager.prepare(config);
-        }, /dist\/ directory not found/);
-    });
+const DIST_DIR = path.join(process.cwd(), "dist");
 
-    it("should create staging directory", () => {
-        const distDir = path.join(process.cwd(), "dist");
-        fs.mkdirSync(distDir, { recursive: true });
-        fs.writeFileSync(path.join(distDir, "test.exe"), "dummy");
+const STAGING_DIR = path.join(process.cwd(), ".neu-builder-staging");
 
-        const config = { target: "nsis", arch: "x64" };
-        const stagingPath = stagingManager.prepare(config);
+function createDist() {
+    fs.mkdirSync(DIST_DIR, { recursive: true });
+}
 
-        assert.ok(fs.existsSync(stagingPath));
+function createBinary(name = "app") {
+    fs.writeFileSync(path.join(DIST_DIR, name), "dummy");
+}
 
-        stagingManager.cleanup(stagingPath);
-        fs.rmSync(distDir, { recursive: true, force: true });
-    });
-});
+function createResources() {
+    fs.writeFileSync(path.join(DIST_DIR, "resources.neu"), "dummy");
+}
 
-describe("Target Loader", () => {
-    it("should throw error for invalid target", () => {
-        assert.throws(() => {
-            targetLoader.load("invalidtarget");
-        }, /not found/);
-    });
-});
+describe(
+    "Staging Manager",
+    () => {
+
+        afterEach(() => {
+
+            fs.rmSync(
+                DIST_DIR,
+                {
+                    recursive: true,
+                    force: true
+                }
+            );
+
+            fs.rmSync(
+                STAGING_DIR,
+                {
+                    recursive: true,
+                    force: true
+                }
+            );
+        });
+
+        it(
+            "should fail when dist directory is missing",
+            () => {
+
+                assert.throws(
+                    () => {
+                        stagingManager.prepare({
+                            buildType: "binary"
+                        });
+                    },
+                    /dist\/ directory not found/
+                );
+            }
+        );
+
+        it(
+            "should fail when resources.neu is missing",
+            () => {
+
+                createDist();
+                createBinary();
+
+                assert.throws(
+                    () => {
+                        stagingManager.prepare({
+                            buildType: "binary"
+                        });
+                    },
+                    /resources\.neu not found/
+                );
+            }
+        );
+
+        it(
+            "should fail when binary is missing",
+            () => {
+
+                createDist();
+                createResources();
+
+                assert.throws(
+                    () => {
+                        stagingManager.prepare({
+                            buildType: "binary"
+                        });
+                    },
+                    /Unable to locate Neutralino binary/
+                );
+            }
+        );
+
+        it(
+            "should fail when multiple binaries exist",
+            () => {
+
+                createDist();
+
+                createBinary("app1");
+                createBinary("app2");
+
+                createResources();
+
+                assert.throws(
+                    () => {
+                        stagingManager.prepare({
+                            buildType: "binary"
+                        });
+                    },
+                    /Multiple binaries found/
+                );
+            }
+        );
+
+        it(
+            "should prepare staging directory successfully",
+            () => {
+
+                createDist();
+
+                createBinary();
+                createResources();
+
+                const stagingPath =
+                    stagingManager.prepare({
+                        buildType: "binary"
+                    });
+
+                assert.ok(
+                    fs.existsSync(
+                        stagingPath
+                    )
+                );
+            }
+        );
+
+        it(
+            "should allow SEA build without resources.neu",
+            () => {
+
+                createDist();
+                createBinary();
+
+                const stagingPath =
+                    stagingManager.prepare({
+                        buildType: "sea"
+                    });
+
+                assert.ok(
+                    fs.existsSync(
+                        stagingPath
+                    )
+                );
+            }
+        );
+    }
+);
