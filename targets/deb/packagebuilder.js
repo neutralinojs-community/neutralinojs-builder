@@ -69,11 +69,8 @@ async function buildPackage(config, stagingPath) {
         controlFileOptions: {
             packageName,
             version: metadata.version || "1.0.0",
-            maintainer:
-                metadata.maintainer || "Unknown",
-            shortDescription:
-                metadata.description ||
-                "Neutralino Application",
+            maintainer: metadata.maintainer,
+            shortDescription: metadata.description
         },
 
         beforePackage: async (tempDir) => {
@@ -105,26 +102,13 @@ async function buildPackage(config, stagingPath) {
         },
 
         beforeCreateDesktopEntry: (entry) => {
-            entry.Name =
-                metadata.applicationName ||
-                packageName;
-
-            entry.GenericName =
-                metadata.applicationName ||
-                packageName;
-
-            entry.Comment =
-                metadata.description || "";
-
+            entry.Name = metadata.applicationName || packageName;
+            entry.GenericName = metadata.applicationName || packageName;
+            entry.Comment = metadata.description;
             entry.Exec = launcherName;
-
             entry.Icon = packageName;
-
-            entry.Categories =
-                metadata.category || "Utility";
-
+            entry.Categories = metadata.category;
             entry.Terminal = false;
-
             return entry;
         },
 
@@ -133,10 +117,7 @@ async function buildPackage(config, stagingPath) {
                 header.name
             );
 
-            if (
-                basename === executableName ||
-                basename === launcherName
-            ) {
+            if (basename === executableName || basename === launcherName) {
                 header.mode = 0o755;
             }
 

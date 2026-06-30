@@ -2,10 +2,10 @@ const logger = require("../../utils/logger");
 
 const buildPackage = require("./packagebuilder");
 
-const {
-    prepareDebLayout,
-    validateDebLayout,
-} = require("./staginglayout");
+// const {
+//     prepareDebLayout,
+//     validateDebLayout,
+// } = require("./staginglayout");
 
 const {
     validateDeb
@@ -16,8 +16,8 @@ async function build(config, stagingPath) {
     try {
         logger.info("DEB: Starting DEB packaging...");
         validateDeb(config);
-        prepareDebLayout(config, stagingPath);
-        validateDebLayout(config, stagingPath);
+        // prepareDebLayout(config, stagingPath);
+        // validateDebLayout(config, stagingPath);
         packagePath = await buildPackage(config, stagingPath);
         logger.info(`DEB: Generated package: ${packagePath}`);
     } catch (error) {
