@@ -54,7 +54,10 @@ async function buildPackage(config, stagingPath) {
             "PackageBuilder: Missing metadata.resolvedBinaryName"
         );
     }
-
+    const maintainerScripts = Object.fromEntries(
+        Object.entries(config.maintainerScripts || {})
+            .filter(([, scriptPath]) => scriptPath)
+    );
     const outputFile =
         await deboaProvider.createPackage({
             sourceDir: stagingPath,
@@ -66,6 +69,9 @@ async function buildPackage(config, stagingPath) {
                 version: metadata.version || "1.0.0",
                 maintainer: metadata.maintainer || "Unknown",
                 shortDescription: metadata.description || "Neutralino Application",
+                ...(Object.keys(maintainerScripts).length > 0 && {
+                    maintainerScripts
+                })
             },
             beforeCreateDesktopEntry:
                 (entry) => {

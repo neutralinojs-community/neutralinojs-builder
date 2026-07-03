@@ -99,11 +99,46 @@ function validateAssets(config) {
     config.assets = assets;
 }
 
+function validateMaintainerScripts(config) {
+
+    const scripts = config.maintainerScripts || {};
+
+    const optionalScripts = [
+        "preinst",
+        "postinst",
+        "prerm",
+        "postrm"
+    ];
+
+    for (const scriptName of optionalScripts) {
+
+        const scriptPath = scripts[scriptName];
+
+        if (!scriptPath) {
+            continue;
+        }
+
+        const resolvedPath = resolveAssetPath(scriptPath);
+
+        if (!fs.existsSync(resolvedPath)) {
+            logger.warn(`DebValidator: Optional maintainer script '${scriptName}' not found: ${resolvedPath}. Skipping.`);
+            scripts[scriptName] = null;
+            continue;
+        }
+        logger.info(`DebValidator: Optional maintainer script '${scriptName}' found: ${resolvedPath}.`);
+        scripts[scriptName] = resolvedPath;
+    }
+
+    config.maintainerScripts = scripts;
+}
+
+
 function validateDeb(config) {
 
     logger.info("DVAL: Validating DEB configuration...");
     validateMetadata(config);
     validateAssets(config);
+    validateMaintainerScripts(config);
     logger.info("DebValidator: DEB configuration validated.");
     return config;
 }

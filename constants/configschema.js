@@ -25,6 +25,12 @@ const resolvedConfig = {
         category: null,
         description: null
     },
+    maintainerScripts: {
+        preinst: null,
+        postinst: null,
+        prerm: null,
+        postrm: null
+    },
     paths: {
         output: null
     }
