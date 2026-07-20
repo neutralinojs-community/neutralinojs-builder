@@ -26,6 +26,12 @@ const resolvedConfig = {
         description: null,
         resolvedBinaryName: null
     },
+    maintainerScripts: {
+        preinst: null,
+        postinst: null,
+        prerm: null,
+        postrm: null
+    },
     paths: {
         output: null
     }

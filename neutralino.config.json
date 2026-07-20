@@ -34,7 +34,11 @@
             "icon": "./installerassets/linux/deb/app.png",
             "category": "Utility",
             "output": "./dist/linux",
-            "maintainer": "GSoC"
+            "maintainer": "GSoC",
+            "preinst": "./installerassets/linux/deb/scripts/preinst", 
+            "postinst": "./installerassets/linux/deb/scripts/postinst", 
+            "prerm": "./installerassets/linux/deb/scripts/prerm", 
+            "postrm": "./installerassets/linux/deb/scripts/postrm"
           },
           {
             "target": "appimage",
