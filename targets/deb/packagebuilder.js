@@ -1,137 +1,131 @@
 const fs = require("fs");
 const path = require("path");
 
-const deboaProvider =
-    require("./providers/deboa");
+const deboaProvider = require("./providers/deboa");
 
 function sanitizePackageName(name) {
-    return String(name || "neutralino-app")
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9.+-]/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^[.-]+|[.-]+$/g, "") || "neutralino-app";
+    return (
+        String(name || "neutralino-app")
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9.+-]/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^[.-]+|[.-]+$/g, "") ||
+        "neutralino-app"
+    );
 }
 
 async function buildPackage(config, stagingPath) {
+    const metadata = config.metadata || {};
 
-    const metadata =
-        config.metadata || {};
+    const packageName = sanitizePackageName(
+        metadata.applicationId
+    );
 
-    const packageName =
-        sanitizePackageName(
-            metadata.applicationId
-        );
+    const launcherName = sanitizePackageName(
+        metadata.applicationName || packageName
+    );
 
     const outputDir = path.resolve(
         process.cwd(),
-        config.paths?.output ||
-        "./dist/linux"
+        config.paths?.output || "./dist/linux"
     );
 
-    fs.mkdirSync(
-        outputDir,
-        { recursive: true }
-    );
+    fs.mkdirSync(outputDir, { recursive: true });
 
     for (const file of fs.readdirSync(outputDir)) {
         if (file.endsWith(".deb")) {
-            fs.rmSync(
-                path.join(
-                    outputDir,
-                    file
-                ),
-                { force: true }
-            );
+            fs.rmSync(path.join(outputDir, file), {
+                force: true,
+            });
         }
     }
 
-    const executableName =
-        metadata.resolvedBinaryName;
+    const executableName = metadata.resolvedBinaryName;
 
     if (!executableName) {
         throw new Error(
             "PackageBuilder: Missing metadata.resolvedBinaryName"
         );
     }
-    const maintainerScripts = Object.fromEntries(
-        Object.entries(config.maintainerScripts || {})
-            .filter(([, scriptPath]) => scriptPath)
+
+    const executablePath = path.join(
+        stagingPath,
+        executableName
     );
-    const outputFile =
-        await deboaProvider.createPackage({
-            sourceDir: stagingPath,
-            targetDir: outputDir,
-            installationRoot: `/opt/${packageName}`,
-            icon: config.assets?.icon || undefined,
-            controlFileOptions: {
-                packageName,
-                version: metadata.version || "1.0.0",
-                maintainer: metadata.maintainer || "Unknown",
-                shortDescription: metadata.description || "Neutralino Application",
-                ...(Object.keys(maintainerScripts).length > 0 && {
-                    maintainerScripts
-                })
-            },
-            beforeCreateDesktopEntry:
-                (entry) => {
-                    entry.Name = metadata.applicationName || packageName;
-                    entry.GenericName = metadata.applicationName || packageName;
-                    entry.Comment = metadata.description || "";
-                    entry.Exec = `/bin/sh -c "cd /opt/${packageName} && ./${executableName}"`;
-                    entry.Icon = packageName;
-                    entry.Categories = metadata.category || "Utility";
-                    entry.Terminal = false;
-                    return entry;
-                },
 
-            // TODO: ADD SYMLINK LATER. Handle it later or remove this. But keeping this for reference.
-            // additionalTarEntries: [
-            //     {
-            //         gname: "root",
-            //         uname: "root",
-            //         type: "symlink",
-            //         mode: parseInt(
-            //             "777",
-            //             8
-            //         ),
-            //         linkname: `../../opt/${packageName}/${executableName}`,
-            //         name:`usr/bin/${executableName}`
-            //     }
-            // ],
+    if (!fs.existsSync(executablePath)) {
+        throw new Error(
+            `PackageBuilder: Executable not found: ${executablePath}`
+        );
+    }
 
-            modifyTarHeader:
-                (header) => {
+    const outputFile = await deboaProvider.createPackage({
+        sourceDir: stagingPath,
+        targetDir: outputDir,
+        installationRoot: `/opt/${packageName}`,
+        icon: config.assets?.icon,
 
-                    if (
-                        path.basename(
-                            header.name
-                        ) === executableName
-                    ) {
-                        header.mode =
-                            parseInt(
-                                "0755",
-                                8
-                            );
-                    }
+        controlFileOptions: {
+            packageName,
+            version: metadata.version || "1.0.0",
+            maintainer: metadata.maintainer,
+            shortDescription: metadata.description
+        },
 
-                    return header;
-                }
-        });
+        beforePackage: async (tempDir) => {
+            const usrBin = path.join(
+                tempDir,
+                "usr",
+                "bin"
+            ); fs.mkdirSync(usrBin, {
+                recursive: true,
+            });
 
-    const stats = fs.statSync(outputFile);
+            const launcherPath = path.join(
+                usrBin,
+                launcherName
+            );
 
-    // TODO: Handle it later or remove this. But keeping this for reference.
-    // Temp fix/workaround for Deboa odd-size archive issue
-    // if (stats.size % 2 !== 0) {
-    //     fs.appendFileSync(
-    //         outputFile,
-    //         "\n"
-    //     );
-    // }
+            fs.writeFileSync(
+                launcherPath,
+                `#!/bin/sh
+                cd /opt/${packageName}
+                exec ./${executableName} "$@"
+                `
+            );
+
+            fs.chmodSync(
+                launcherPath,
+                0o755
+            );
+        },
+
+        beforeCreateDesktopEntry: (entry) => {
+            entry.Name = metadata.applicationName || packageName;
+            entry.GenericName = metadata.applicationName || packageName;
+            entry.Comment = metadata.description;
+            entry.Exec = launcherName;
+            entry.Icon = packageName;
+            entry.Categories = metadata.category;
+            entry.Terminal = false;
+            return entry;
+        },
+
+        modifyTarHeader: (header) => {
+            const basename = path.basename(
+                header.name
+            );
+
+            if (basename === executableName || basename === launcherName) {
+                header.mode = 0o755;
+            }
+
+            return header;
+        },
+    });
 
     return outputFile;
 }
 
-module.exports =
-    buildPackage;
+module.exports = buildPackage;

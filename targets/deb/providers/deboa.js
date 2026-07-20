@@ -11,7 +11,8 @@ async function createPackage(options) {
         icon: options.icon,
         controlFileOptions: options.controlFileOptions,
         beforeCreateDesktopEntry: options.beforeCreateDesktopEntry,
-        modifyTarHeader: options.modifyTarHeader
+        modifyTarHeader: options.modifyTarHeader,
+        beforePackage: options.beforePackage
     });
 
     await deboa.package();

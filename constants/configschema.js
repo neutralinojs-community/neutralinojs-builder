@@ -23,7 +23,8 @@ const resolvedConfig = {
         version: null,
         maintainer: null,
         category: null,
-        description: null
+        description: null,
+        resolvedBinaryName: null
     },
     maintainerScripts: {
         preinst: null,
