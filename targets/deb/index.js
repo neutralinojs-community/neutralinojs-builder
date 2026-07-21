@@ -15,7 +15,7 @@ async function build(config, stagingPath) {
         logger.info(`DEB: Generated package: ${packagePath}`);
     } catch (error) {
         console.error(error);
-        throw error
+        throw error;
     }
 
     return packagePath;

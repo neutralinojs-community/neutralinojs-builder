@@ -16,6 +16,20 @@ function sanitizePackageName(name) {
 }
 
 async function buildPackage(config, stagingPath) {
+    if (!config || typeof config !== "object") {
+        throw new Error("PackageBuilder: Missing DEB configuration.");
+    }
+
+    if (!stagingPath) {
+        throw new Error("PackageBuilder: Missing staging path.");
+    }
+
+    if (!fs.existsSync(stagingPath)) {
+        throw new Error(
+            `PackageBuilder: Staging path not found: ${stagingPath}`
+        );
+    }
+
     const metadata = config.metadata || {};
 
     const packageName = sanitizePackageName(

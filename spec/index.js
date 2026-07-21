@@ -11,15 +11,28 @@ const specModule =
         ? process.argv[2]
         : '';
 
-fs.readdirSync(testDir)
-    .filter((file) =>
-        file.includes(specModule + '.spec.js')
-    )
-    .forEach((file) => {
-        mocha.addFile(
-            path.join(testDir, file)
-        );
-    });
+function addSpecFiles(directory) {
+    fs.readdirSync(directory, { withFileTypes: true })
+        .forEach((entry) => {
+            const fullPath =
+                path.join(directory, entry.name);
+
+            if (entry.isDirectory()) {
+                addSpecFiles(fullPath);
+                return;
+            }
+
+            if (!entry.name.includes(specModule + '.spec.js')) {
+                return;
+            }
+
+            mocha.addFile(
+                fullPath
+            );
+        });
+}
+
+addSpecFiles(testDir);
 
 mocha.timeout(50000);
 

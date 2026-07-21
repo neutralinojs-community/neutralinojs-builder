@@ -3,6 +3,17 @@ const path = require("path");
 const { Deboa } = require("deboa");
 
 async function createPackage(options) {
+    if (!options || typeof options !== "object") {
+        throw new Error("DeboaProvider: Missing package options.");
+    }
+
+    if (!options.sourceDir) {
+        throw new Error("DeboaProvider: options.sourceDir is required.");
+    }
+
+    if (!options.targetDir) {
+        throw new Error("DeboaProvider: options.targetDir is required.");
+    }
 
     const deboa = new Deboa({
         sourceDir: options.sourceDir,
@@ -19,6 +30,7 @@ async function createPackage(options) {
 
     const generated =
         fs.readdirSync(options.targetDir)
+            .sort()
             .find(file =>
                 file.endsWith(".deb")
             );

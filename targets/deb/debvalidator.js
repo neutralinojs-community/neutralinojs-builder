@@ -7,7 +7,15 @@ function resolveAssetPath(assetPath) {
         return null;
     }
 
+    if (typeof assetPath !== "string") {
+        throw new Error("DebValidator: Asset paths must be strings.");
+    }
+
     const normalizedPath = assetPath.trim();
+
+    if (!normalizedPath) {
+        return null;
+    }
 
     const candidates = [];
 
@@ -38,7 +46,10 @@ function validateMetadata(config) {
         throw new Error("DebValidator: Missing metadata configuration.");
     }
 
-    if (!config.metadata.applicationId) {
+    if (
+        typeof config.metadata.applicationId !== "string" ||
+        !config.metadata.applicationId.trim()
+    ) {
         throw new Error("DebValidator: metadata.applicationId is required.");
     }
 }
@@ -134,6 +145,9 @@ function validateMaintainerScripts(config) {
 
 
 function validateDeb(config) {
+    if (!config || typeof config !== "object") {
+        throw new Error("DebValidator: Missing DEB configuration.");
+    }
 
     logger.info("DVAL: Validating DEB configuration...");
     validateMetadata(config);
