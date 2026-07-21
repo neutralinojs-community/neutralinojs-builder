@@ -13,7 +13,7 @@ function createDist() {
     fs.mkdirSync(APP_DIST_DIR, { recursive: true });
 }
 
-function createBinary(name = "app-linux_x64") {
+function createBinary(name = "neutralino-linux_x64") {
     fs.writeFileSync(path.join(APP_DIST_DIR, name), "dummy");
 }
 
@@ -59,7 +59,7 @@ describe(
                 assert.throws(
                     () => {
                         stagingManager.prepare(createConfig({
-                            buildType: "binary"
+                            buildType: "standard"
                         }));
                     },
                     /dist\/ directory not found/
@@ -77,7 +77,7 @@ describe(
                 assert.throws(
                     () => {
                         stagingManager.prepare(createConfig({
-                            buildType: "binary"
+                            buildType: "standard"
                         }));
                     },
                     /No application output folder found/
@@ -86,7 +86,7 @@ describe(
         );
 
         it(
-            "should fail when binary is missing",
+            "should fail when standard is missing",
             () => {
 
                 createDist();
@@ -95,7 +95,7 @@ describe(
                 assert.throws(
                     () => {
                         stagingManager.prepare(createConfig({
-                            buildType: "binary"
+                            buildType: "standard"
                         }));
                     },
                     /Unable to locate Neutralino binary/
@@ -109,15 +109,15 @@ describe(
 
                 createDist();
 
-                createBinary("app1-linux_x64");
-                createBinary("app2-linux_x64");
+                createBinary("neutralino1-linux_x64");
+                createBinary("neutralino2-linux_x64");
 
                 createResources();
 
                 assert.throws(
                     () => {
                         stagingManager.prepare(createConfig({
-                            buildType: "binary"
+                            buildType: "standard"
                         }));
                     },
                     /Multiple binaries matched/
@@ -136,7 +136,7 @@ describe(
 
                 const stagingPath =
                     stagingManager.prepare(createConfig({
-                        buildType: "binary"
+                        buildType: "standard"
                     }));
 
                 assert.ok(
