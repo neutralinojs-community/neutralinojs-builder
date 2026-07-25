@@ -33,19 +33,16 @@ It sits on top of the existing neu build workflow and automates packaging for di
 
 ```bash
 # Installing the plugin
-neu plugins --add @neutralinojs-community/builder
+neu plugins --add @neutralinojs-contrib/builder
 
 # neu builder [target] [options]
-neu builder nsis --x64 # NSIS setup for Windows x64
-neu builder deb --ia32 # Debian package for GNU/Linux ia32
-neu builder appimage --x64 # AppImage for GNU/Linux x64
-neu builder deb # GNU/Linux Debian packages for all supported CPU architectures
-
-# Use configuration from neutralino.config.json
-neu builder
+neu builder nsis    # NSIS setup for Windows x64
+neu builder deb     # Debian package for GNU/Linux
+neu builder appimage # AppImage for GNU/Linux x64
+neu builder dmg     # DMG installer for macOS
 
 # Removing the plugin
-neu plugins --remove @neutralinojs-community/builder
+neu plugins --remove @neutralinojs-contrib/builder
 ```
 
 ---
@@ -54,8 +51,8 @@ neu plugins --remove @neutralinojs-community/builder
 
 - [x] Task 1: Plugin core initializer (SEA support)
 - [x] Task 2: Configuration & dependency pre-check
-- [ ] Task 3: Windows NSIS installer
-- [ ] Task 4: Linux DEB package
+- [x] Task 3: Windows NSIS installer
+- [x] Task 4: Linux DEB package
 - [ ] Task 5: Linux AppImage
 - [ ] Task 6: macOS DMG installer
 - [x] Task 7: CLI integration
@@ -66,4 +63,4 @@ neu plugins --remove @neutralinojs-community/builder
 
 ## Development Status
 
-This project is currently under active development and the initial release is expected soon. The architecture and implementation may evolve during development as the packaging pipeline and platform targets change.
+This project is currently under active development. The first pre-release (v0.1.0) supporting DEB and NSIS generation is expected soon. AppImage and DMG support will follow in subsequent releases.
