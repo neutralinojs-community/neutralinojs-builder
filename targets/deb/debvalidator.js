@@ -38,7 +38,7 @@ function validateMetadata(config) {
         throw new Error("DebValidator: Missing metadata configuration.");
     }
 
-    if (!config.metadata.applicationId) {
+    if (!config.metadata.applicationId || !config.metadata.applicationId.trim()) {
         throw new Error("DebValidator: metadata.applicationId is required.");
     }
 }
