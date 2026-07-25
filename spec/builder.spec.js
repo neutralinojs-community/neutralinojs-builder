@@ -5,19 +5,28 @@ const path = require("path");
 const stagingManager = require("../lib/stagingmanager");
 
 const DIST_DIR = path.join(process.cwd(), "dist");
+const APP_DIST_DIR = path.join(DIST_DIR, "app");
 
 const STAGING_DIR = path.join(process.cwd(), ".neu-builder-staging");
 
 function createDist() {
-    fs.mkdirSync(DIST_DIR, { recursive: true });
+    fs.mkdirSync(APP_DIST_DIR, { recursive: true });
 }
 
-function createBinary(name = "app") {
-    fs.writeFileSync(path.join(DIST_DIR, name), "dummy");
+function createBinary(name = "neutralino-linux_x64") {
+    fs.writeFileSync(path.join(APP_DIST_DIR, name), "dummy");
 }
 
 function createResources() {
-    fs.writeFileSync(path.join(DIST_DIR, "resources.neu"), "dummy");
+    fs.writeFileSync(path.join(APP_DIST_DIR, "resources.neu"), "dummy");
+}
+
+function createConfig(overrides = {}) {
+    return {
+        targetPlatform: "linux",
+        metadata: {},
+        ...overrides
+    };
 }
 
 describe(
@@ -49,9 +58,9 @@ describe(
 
                 assert.throws(
                     () => {
-                        stagingManager.prepare({
-                            buildType: "binary"
-                        });
+                        stagingManager.prepare(createConfig({
+                            buildType: "standard"
+                        }));
                     },
                     /dist\/ directory not found/
                 );
@@ -67,17 +76,17 @@ describe(
 
                 assert.throws(
                     () => {
-                        stagingManager.prepare({
-                            buildType: "binary"
-                        });
+                        stagingManager.prepare(createConfig({
+                            buildType: "standard"
+                        }));
                     },
-                    /resources\.neu not found/
+                    /No application output folder found/
                 );
             }
         );
 
         it(
-            "should fail when binary is missing",
+            "should fail when standard is missing",
             () => {
 
                 createDist();
@@ -85,9 +94,9 @@ describe(
 
                 assert.throws(
                     () => {
-                        stagingManager.prepare({
-                            buildType: "binary"
-                        });
+                        stagingManager.prepare(createConfig({
+                            buildType: "standard"
+                        }));
                     },
                     /Unable to locate Neutralino binary/
                 );
@@ -100,18 +109,18 @@ describe(
 
                 createDist();
 
-                createBinary("app1");
-                createBinary("app2");
+                createBinary("neutralino1-linux_x64");
+                createBinary("neutralino2-linux_x64");
 
                 createResources();
 
                 assert.throws(
                     () => {
-                        stagingManager.prepare({
-                            buildType: "binary"
-                        });
+                        stagingManager.prepare(createConfig({
+                            buildType: "standard"
+                        }));
                     },
-                    /Multiple binaries found/
+                    /Multiple binaries matched/
                 );
             }
         );
@@ -126,9 +135,9 @@ describe(
                 createResources();
 
                 const stagingPath =
-                    stagingManager.prepare({
-                        buildType: "binary"
-                    });
+                    stagingManager.prepare(createConfig({
+                        buildType: "standard"
+                    }));
 
                 assert.ok(
                     fs.existsSync(
@@ -146,9 +155,9 @@ describe(
                 createBinary();
 
                 const stagingPath =
-                    stagingManager.prepare({
+                    stagingManager.prepare(createConfig({
                         buildType: "sea"
-                    });
+                    }));
 
                 assert.ok(
                     fs.existsSync(
