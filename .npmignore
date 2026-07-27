@@ -1,0 +1,5 @@
+spec/
+test-app/
+test_output/
+.github/
+.gitignore
