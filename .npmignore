@@ -3,3 +3,5 @@ test-app/
 test_output/
 .github/
 .gitignore
+scripts/
+.releasezri/
