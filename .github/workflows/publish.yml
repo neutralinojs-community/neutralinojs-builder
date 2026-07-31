@@ -9,12 +9,21 @@ on:
     inputs:
       version:
         type: string
-        required: true
+        required: false
         description: "Version number e.g., 0.1.0"
+      publish_nightly_npm:
+        type: boolean
+        required: false
+        default: false
+        description: "Publish nightly NPM package"
+
+  schedule:
+    - cron: "0 0 * * *"
 
 env:
-  VERSION: ${{ inputs.version }}
-  VERSION_WITH_V: v${{ inputs.version }}
+  VERSION: ${{ inputs.version != '' && inputs.version || 'nightly' }}
+  VERSION_WITH_V: ${{ inputs.version != '' && format('v{0}', inputs.version) || 'nightly' }}
+  NIGHTLY_NPM: ${{ inputs.publish_nightly_npm }}
 
 jobs:
   release-info:
@@ -24,13 +33,15 @@ jobs:
         run: |
           echo "VERSION: $VERSION"
           echo "VERSION_WITH_V: $VERSION_WITH_V"
+          echo "NIGHTLY_NPM: $NIGHTLY_NPM"
 
   create-release:
     needs: [release-info]
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install dependencies
         run: npm ci
@@ -38,7 +49,14 @@ jobs:
       - name: Create release notes
         run: |
           chmod +x ./scripts/rz.py
-          ./scripts/rz.py create $VERSION
+
+          if [[ "$VERSION" != "nightly" ]]; then
+            ./scripts/rz.py create $VERSION
+          else
+            ./scripts/rz.py create nightly \
+              --no-changes \
+              --top=":warning: **Nightly build**: This nightly-release may contain experimental features and breaking changes."
+          fi
 
       - name: Delete release tag
         run: |
@@ -48,23 +66,46 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Create a new branch for the release
+        run: |
+          if git ls-remote --exit-code --heads origin $VERSION_WITH_V; then
+            git push origin -d $VERSION_WITH_V
+          fi
+
+          git checkout -b $VERSION_WITH_V
+          git push origin $VERSION_WITH_V
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create the new release
         run: |
-          gh release create $VERSION_WITH_V \
-            --title "neu-builder $VERSION_WITH_V released!" \
-            --notes-file .tmprz/release_notes.md
+          if [[ "$VERSION" != "nightly" ]]; then
+            gh release create $VERSION_WITH_V \
+              --title "neu-builder $VERSION_WITH_V released!" \
+              --notes-file .tmprz/release_notes.md
+          else
+            gh release create nightly \
+              --title "neu-builder nightly release" \
+              --notes-file .tmprz/release_notes.md \
+              --prerelease
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Send a pull request for the modified changelog
+        if: ${{ env.VERSION != 'nightly' }}
         run: |
           branch=changelog-update-$VERSION_WITH_V
+
           git checkout -b $branch
           git add CHANGELOG.md
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git commit -m "Update changelog for $VERSION_WITH_V"
           git push origin $branch
+
           gh pr create \
             --title "Update changelog after $VERSION_WITH_V release" \
             --body "This pull request updates CHANGELOG.md file after the recent release." \
@@ -78,20 +119,34 @@ jobs:
   publish-npm-package:
     needs: [create-release]
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: "20.x"
+          node-version: "24.x"
           registry-url: "https://registry.npmjs.org"
           scope: "@neutralinojs-contrib"
 
-      - name: Bump package.json version
-        run: npm version $VERSION --no-git-tag-version --allow-same-version
+      - name: Publish nightly release
+        if: ${{ env.VERSION == 'nightly' && env.NIGHTLY_NPM == 'true' }}
+        run: |
+          vend=nightly-$(date +"%Y%m%d")
+          v=$(npm pkg get version | tr -d '"')-$vend
 
-      - name: Publish package
-        run: npm publish --access=public
+          npm version $v \
+            --commit-hooks=false \
+            --git-tag-version=false
+
+          npm publish --access=public --tag nightly
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish main release
+        if: ${{ env.VERSION != 'nightly' }}
+        run: |
+          npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
