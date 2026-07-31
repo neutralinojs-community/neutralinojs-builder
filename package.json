@@ -1,6 +1,6 @@
 {
   "name": "@neutralinojs-contrib/builder",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A standalone Neutralinojs CLI plugin for packaging and installer generation",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/neutralinojs-community/neutralinojs-builder"
+    "url": "git+https://github.com/neutralinojs-community/neutralinojs-builder.git"
   },
   "keywords": [
     "neutralinojs",
