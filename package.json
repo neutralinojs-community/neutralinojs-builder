@@ -1,6 +1,6 @@
 {
   "name": "@neutralinojs-contrib/builder",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A standalone Neutralinojs CLI plugin for packaging and installer generation",
   "main": "index.js",
   "scripts": {
