@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.1.1
+
 ### Config
 - Fix a config resolution issue
 
