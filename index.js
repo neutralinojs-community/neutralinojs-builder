@@ -18,7 +18,6 @@ module.exports = {
                     ? rawArgs.slice(separatorIndex + 1)
                     : [];
 
-                // Extract arch flag (e.g. --x64, --arm64, --ia32, --armhf)
                 const archArg = preArgs.find(
                     arg => arg.startsWith("--") && arg !== "--"
                 );
@@ -49,7 +48,6 @@ if (require.main === module) {
     const neuBuildFlags = separatorIndex !== -1 ? args.slice(separatorIndex + 1) : [];
     const target = passedFlags.find(arg => !arg.startsWith('-'));
 
-    // Extract arch flag (e.g. --x64, --arm64, --ia32, --armhf)
     const archArg = passedFlags.find(
         arg => arg.startsWith('--') && arg !== '--'
     );
