@@ -2,7 +2,13 @@ const fs = require("fs");
 const path = require("path");
 
 const deboaProvider = require("./providers/deboa");
-
+const DEB_ARCH_MAP = {
+    x64: "amd64",
+    ia32: "i386",
+    armhf: "armhf",
+    arm64: "arm64",
+};
+const logger = require("../../utils/logger");
 function sanitizePackageName(name) {
     return (
         String(name || "neutralino-app")
@@ -28,7 +34,7 @@ async function buildPackage(config, stagingPath) {
 
     const outputDir = path.resolve(
         process.cwd(),
-        config.paths?.output || "./dist/linux"
+        config.paths?.output || "./dist/build-output"
     );
 
     fs.mkdirSync(outputDir, { recursive: true });
@@ -60,17 +66,22 @@ async function buildPackage(config, stagingPath) {
         );
     }
 
+    // [ARCH-DEBUG] Log arch values entering packagebuilder
+    console.log(`[ARCH-DEBUG] packagebuilder: config.arch = ${JSON.stringify(config.arch)}`);
+    console.log(`[ARCH-DEBUG] packagebuilder: DEB_ARCH_MAP lookup = ${JSON.stringify(DEB_ARCH_MAP[config.arch])}`);
+    console.log(`[ARCH-DEBUG] packagebuilder: resolved architecture field = ${JSON.stringify(DEB_ARCH_MAP[config.arch] || config.arch || "amd64")}`);
+    console.log(config.arch);
     const outputFile = await deboaProvider.createPackage({
         sourceDir: stagingPath,
         targetDir: outputDir,
         installationRoot: `/opt/${packageName}`,
         icon: config.assets?.icon,
-
         controlFileOptions: {
             packageName,
             version: metadata.version || "1.0.0",
             maintainer: metadata.maintainer,
-            shortDescription: metadata.description
+            shortDescription: metadata.description,
+            architecture: DEB_ARCH_MAP[config.arch] || config.arch,
         },
 
         beforePackage: async (tempDir) => {

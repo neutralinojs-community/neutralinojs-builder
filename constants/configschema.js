@@ -8,7 +8,7 @@ const resolvedConfig = {
     hostPlatform: null,
     targetPlatform: null,
     target: null,
-    arch: "x64",
+    arch: null,
     buildType: "standard",
     assets: {
         icon: null,
@@ -20,6 +20,7 @@ const resolvedConfig = {
     metadata: {
         applicationId: null,
         applicationName: null,
+        binaryName: null,
         version: null,
         maintainer: null,
         category: null,

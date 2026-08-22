@@ -11,18 +11,30 @@ module.exports = {
             .action(async (target, options, command) => {
                 const rawArgs = command.parent.rawArgs;
                 const separatorIndex = rawArgs.indexOf("--");
+                const preArgs = separatorIndex !== -1
+                    ? rawArgs.slice(0, separatorIndex)
+                    : rawArgs;
                 const neuBuildFlags = separatorIndex !== -1
                     ? rawArgs.slice(separatorIndex + 1)
                     : [];
 
+                // Extract arch flag (e.g. --x64, --arm64, --ia32, --armhf)
+                const archArg = preArgs.find(
+                    arg => arg.startsWith("--") && arg !== "--"
+                );
+                const arch = archArg ? archArg.replace("--", "") : null;
+
                 logger.info("Neutralinojs Builder initialized.");
                 logger.info(`Target detected: ${target}`);
+                if (arch) {
+                    logger.info(`Architecture: ${arch}`);
+                }
                 if (neuBuildFlags.length > 0) {
                     logger.info(`Forwarding core build flags: ${neuBuildFlags.join(' ')}`);
                 }
 
                 try {
-                    await builder.build(target, neuBuildFlags);
+                    await builder.build(target, arch, neuBuildFlags);
                 } catch (err) {
                     process.exit(1);
                 }
@@ -37,17 +49,26 @@ if (require.main === module) {
     const neuBuildFlags = separatorIndex !== -1 ? args.slice(separatorIndex + 1) : [];
     const target = passedFlags.find(arg => !arg.startsWith('-'));
 
+    // Extract arch flag (e.g. --x64, --arm64, --ia32, --armhf)
+    const archArg = passedFlags.find(
+        arg => arg.startsWith('--') && arg !== '--'
+    );
+    const arch = archArg ? archArg.replace('--', '') : null;
+
     logger.info("Neutralinojs Builder initialized standalone.");
 
     if (!target) {
-        logger.warn("No target specified. Usage: node index.js <target> -- [neu build flags]");
+        logger.warn("No target specified. Usage: node index.js <target> [--arch] -- [neu build flags]");
         process.exit(1);
     } else {
         logger.info(`Target detected: ${target}`);
+        if (arch) {
+            logger.info(`Architecture: ${arch}`);
+        }
         if (neuBuildFlags.length > 0) {
             logger.info(`Forwarding core build flags: ${neuBuildFlags.join(' ')}`);
         }
-        builder.build(target, neuBuildFlags).catch(() => {
+        builder.build(target, arch, neuBuildFlags).catch(() => {
             process.exit(1);
         });
     }
