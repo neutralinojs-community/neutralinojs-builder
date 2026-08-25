@@ -130,7 +130,14 @@ async function buildPackage(config, stagingPath) {
             return header;
         },
     });
+    const stats = fs.statSync(outputFile);
 
+    if (stats.size % 2 !== 0) {
+        fs.appendFileSync(
+            outputFile,
+            "\n"
+        );
+    }
     return outputFile;
 }
 
