@@ -66,11 +66,6 @@ async function buildPackage(config, stagingPath) {
         );
     }
 
-    // [ARCH-DEBUG] Log arch values entering packagebuilder
-    console.log(`[ARCH-DEBUG] packagebuilder: config.arch = ${JSON.stringify(config.arch)}`);
-    console.log(`[ARCH-DEBUG] packagebuilder: DEB_ARCH_MAP lookup = ${JSON.stringify(DEB_ARCH_MAP[config.arch])}`);
-    console.log(`[ARCH-DEBUG] packagebuilder: resolved architecture field = ${JSON.stringify(DEB_ARCH_MAP[config.arch] || config.arch || "amd64")}`);
-    console.log(config.arch);
     const outputFile = await deboaProvider.createPackage({
         sourceDir: stagingPath,
         targetDir: outputDir,
