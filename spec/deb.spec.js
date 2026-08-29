@@ -89,6 +89,7 @@ describe("DEB Packaging Suite", () => {
             };
 
             const config = {
+                arch: "x64",
                 paths: {
                     output: outputDir
                 },
@@ -117,7 +118,8 @@ describe("DEB Packaging Suite", () => {
                 packageName: "com.example-app",
                 version: "2.0.0",
                 maintainer: "Dev <dev@example.com>",
-                shortDescription: "Test App Description"
+                shortDescription: "Test App Description",
+                architecture: "amd64" // Included mapped architecture field
             });
 
             // Verify Desktop Entry transformer hook

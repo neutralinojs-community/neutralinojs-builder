@@ -29,11 +29,12 @@
             "arch": [
               "x64",
               "ia32",
-              "armhf"
+              "armhf",
+              "arm64"
             ],
             "icon": "./installerassets/linux/deb/app.png",
             "category": "Utility",
-            "output": "./dist/linux",
+            "output": "./dist/debian-output",
             "maintainer": "GSoC",
             "preinst": "./installerassets/linux/deb/scripts/preinst", 
             "postinst": "./installerassets/linux/deb/scripts/postinst", 
