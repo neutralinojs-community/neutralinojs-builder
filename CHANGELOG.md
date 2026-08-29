@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Core
+- Add Linux AppImage generation support
+- Add Apple DMG generation support
+- Various improvements and bug fixes 
+
 ## v0.1.1
 
 ### Config
