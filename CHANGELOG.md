@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.3.1
+
 ### Core
 - Add Linux AppImage generation support
 - Add Apple DMG generation support
