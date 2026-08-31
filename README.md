@@ -45,22 +45,6 @@ neu builder dmg     # DMG installer for macOS
 neu plugins --remove @neutralinojs-contrib/builder
 ```
 
----
+## Creating application installers
 
-## Progress
-
-- [x] Task 1: Plugin core initializer (SEA support)
-- [x] Task 2: Configuration & dependency pre-check
-- [x] Task 3: Windows NSIS installer
-- [x] Task 4: Linux DEB package
-- [ ] Task 5: Linux AppImage
-- [ ] Task 6: macOS DMG installer
-- [x] Task 7: CLI integration
-- [ ] Task 8: Testing & CI/CD pipeline
-- [ ] Task 9: Documentation & refinement
-
----
-
-## Development Status
-
-This project is currently under active development. The first pre-release (v0.1.0) supporting DEB and NSIS generation is expected soon. AppImage and DMG support will follow in subsequent releases.
+Learn how to create application installers for Linux, macOS, and Windows by following the [Creating Application Installers guide](https://neutralino.js.org/docs/distribution/overview#creating-application-installers).
