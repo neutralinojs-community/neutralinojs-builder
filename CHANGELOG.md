@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.0.0
+
 ### Core
 - Initial major release for users
 
