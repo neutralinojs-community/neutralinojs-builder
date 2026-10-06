@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Core
+- Initial major release for users
+
 ## v0.3.1
 
 ### Core
