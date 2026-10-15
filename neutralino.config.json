@@ -35,7 +35,7 @@
             "icon": "./installerassets/linux/deb/app.png",
             "category": "Utility",
             "output": "./dist/debian-output",
-            "maintainer": "GSoC",
+            "maintainer": "Maintainer",
             "preinst": "./installerassets/linux/deb/scripts/preinst", 
             "postinst": "./installerassets/linux/deb/scripts/postinst", 
             "prerm": "./installerassets/linux/deb/scripts/prerm", 
@@ -50,7 +50,7 @@
             "icon": "./installerassets/linux/appimage/app.png",
             "license": "./installerassets/LICENSE.txt",
             "output": "./dist/linux",
-            "maintainer": "GSoC"
+            "maintainer": "Maintainer"
           }
         ]
       },
