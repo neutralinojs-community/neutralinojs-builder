@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Config
+- Fix configuration file loading issues
+
 ## v1.0.0
 
 ### Core
